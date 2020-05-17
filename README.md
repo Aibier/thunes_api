@@ -26,6 +26,13 @@ This api provides functionalities with jwt authentication, create account, topup
 1. Monitor tools: Untrends
 2. Will provide credentials if needed, the screenshots will be in blog.
 
+###: APi Introduction
+1. Auth (api/auth/*). Auth api contains user registration, login, and token refresh.
+2. Account(api/account/). Account API contains user create account, topup account and retrieve accout balance.
+3. Transaction (api/account/transaction/). Provides fuctionalities to transfer money to another user account and view transaction history.
+
+### Models:
+1. UserAccount, Transacrion
 
 ### Author: Tony Aizize
 Read more about me at: http://taymas-technology.globalpeacelove.com/about-me
