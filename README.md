@@ -13,9 +13,10 @@ This api provides functionalities with jwt authentication, create account, topup
 7. Give access to db: ```GRANT ALL PRIVILEGES ON DATABASE thunes_db to thunes_user;```
 8. Then exixt from postgres. 
 9. Inside virtual env and project root run: ``` python manage.py migrate```
-10: Run server: ```python manage.py runserver```
+10 Run server: ```python manage.py runserver```
 11. Run test: ```python manage.py test```
-12. To run docker file locally type: ```docker-compose up -d --build```
+12. To build: ```docker-compose -f docker-compose.yml up -d --build```
+13 To run: ```docker-comose up```
 
 ### To view API docs
 1. View from localhost: ```http://localhost:8000/api/docs/#```
@@ -30,6 +31,8 @@ This api provides functionalities with jwt authentication, create account, topup
 1. Auth (api/auth/*). Auth api contains user registration, login, and token refresh.
 2. Account(api/account/). Account API contains user create account, topup account and retrieve accout balance.
 3. Transaction (api/account/transaction/). Provides fuctionalities to transfer money to another user account and view transaction history.
+4. Report(api/account/report/). This API will generate a pdf report for last for month for loggedin user. 
+5. Sample report: http://thunes.globalpeacelove.com/staticfiles/report.pdf
 
 ### Models:
 1. UserAccount, Transaction

@@ -1,3 +1,4 @@
+import os
 from rest_framework import status
 from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated
@@ -50,7 +51,7 @@ class ThunesTransactionReportAPI(APIView):
         print(self.request.user)
         user_id = self.request.user.id
         if user_id:
-            generate_report(user_id, 'TONY', 'YIXIN')
+            generate_report(user_id, 'Feb', 'May')
             with open('{}/report.pdf'.format(settings.BASE_DIR), 'rb') as pdf:
                 response = HttpResponse(pdf.read(),content_type='application/pdf')
                 os.remove('{}/report.pdf'.format(settings.BASE_DIR))

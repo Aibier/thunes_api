@@ -15,7 +15,7 @@ import os
 import datetime
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -24,9 +24,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'f8^d84rz-epxo0$5$xrc3j+#q-tz%&eic_e#q2r4q5g&%29+tf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['thunes.globalpeacelove.com']
 
 # Application definition
 
@@ -81,12 +81,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT': 5432,
+        'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.postgresql_psycopg2'),
+        'NAME': os.environ.get('SQL_DATABASE', 'thunes_db'),
+        'USER': os.environ.get('SQL_USER', 'thunes_user'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD', 'password@2020'),
+        'HOST': os.environ.get('SQL_HOST', 'localhost'),
+        'PORT': os.environ.get('SQL_PORT', '5432'),
     }
 }
 
@@ -157,11 +157,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/staticfiles/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_URL = '/staticfiles/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-MEDIA_URL = '/mediafiles/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+# MEDIA_URL = '/mediafiles/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+
+# Static resource settings
+STATIC_URL = '/public/'
+STATICFILES_DIRS = (
+    (os.path.join(PROJECT_PATH, '..', 'frontend/public'),)
+)
+
+MEDIA_URL = '{}media/'.format(STATIC_URL)
+STATIC_ROOT = os.path.join(PROJECT_PATH, '', 'resources/')
+MEDIA_ROOT = os.path.join(PROJECT_PATH, '..', 'frontend/public/media')
 
 # Allows any client access.
 CORS_ORIGIN_ALLOW_ALL = True
