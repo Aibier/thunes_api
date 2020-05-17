@@ -5,7 +5,13 @@ from .serializer import ThunesUserAccountSerializer, ThunesUserTransactionSerial
 from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView
 from .models import UserAccount, Transaction
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import permissions
 from apps.accounts.utils.pagination import PaginationWithDefaults
+from apps.accounts.utils.generate_report import generate_report
+from rest_framework.exceptions import PermissionDenied
+from django.conf import settings
+from django.http import HttpResponse
 # Create your views here.
 
 
@@ -35,3 +41,19 @@ class ThunesTransactionAPI(ListCreateAPIView):
         transactions = Transaction.objects.filter(Q(sender_id=self.request.user.id) | Q(
             receiver_id=self.request.user.id))
         return transactions
+
+
+class ThunesTransactionReportAPI(APIView):
+    permission_required = [IsAuthenticated]
+
+    def get(self, request):
+        print(self.request.user)
+        user_id = self.request.user.id
+        if user_id:
+            generate_report(user_id, 'TONY', 'YIXIN')
+            with open('{}/report.pdf'.format(settings.BASE_DIR), 'rb') as pdf:
+                response = HttpResponse(pdf.read(),content_type='application/pdf')
+                os.remove('{}/report.pdf'.format(settings.BASE_DIR))
+                return response
+        raise PermissionDenied(detail='Permission denied', code=403)
+
