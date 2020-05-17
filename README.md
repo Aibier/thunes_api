@@ -32,7 +32,7 @@ This api provides functionalities with jwt authentication, create account, topup
 3. Transaction (api/account/transaction/). Provides fuctionalities to transfer money to another user account and view transaction history.
 
 ### Models:
-1. UserAccount, Transacrion
+1. UserAccount, Transaction
 
 ### Author: Tony Aizize
 Read more about me at: http://taymas-technology.globalpeacelove.com/about-me
