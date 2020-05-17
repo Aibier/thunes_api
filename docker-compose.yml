@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/usr/src/app/
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=food
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=thues_db
+      - SQL_USER=thunes_user
+      - SQL_PASSWORD=password@2020
+      - SQL_HOST=localhost
+      - SQL_PORT=5432
+      - DATABASE=postgres
+      - USE_DOCKER=yes
+    depends_on:
+      - db
+  db:
+    image: postgres:12.0-alpine
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=thunes_user
+      - POSTGRES_PASSWORD=password@2020
+      - POSTGRES_DB=thues_db
+volumes:
+  postgres_data:

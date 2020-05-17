@@ -1,0 +1,13 @@
+*.log
+*.pot
+*.pyc
+# Pycharm
+*.vscode
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media
+venv
+.idea
+.pytest_cache

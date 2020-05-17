@@ -1,0 +1,55 @@
+image:
+  name: docker/compose:1.25.4
+  entrypoint: [""]
+
+services:
+  - docker:dind
+
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+
+before_script:
+  - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
+  - export WEB_IMAGE=$IMAGE:web
+  - export NGINX_IMAGE=$IMAGE:nginx
+  - apk add --no-cache openssh-client bash
+  - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+
+test:
+  stage: test
+  script:
+    - docker pull $IMAGE:web || true
+    - docker pull $IMAGE:nginx || true
+    - docker-compose -f docker-compose.yml up -d --build
+    - python3 manage.py test
+
+build:
+  stage: build
+  script:
+    - docker pull $IMAGE:web || true
+    - docker pull $IMAGE:nginx || true
+    - docker-compose -f docker-compose.ci.yml up -d  --build
+    - docker push $IMAGE:web
+    - docker push $IMAGE:nginx
+
+deploy:
+  stage: deploy
+  script:
+    - mkdir -p ~/.ssh
+    - echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - cat ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh/id_rsa
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/id_rsa
+    - ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
+    - chmod +x ./deploy.sh
+    - scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose.prod.yml root@$DIGITAL_OCEAN_IP_ADDRESS:/app
+    - bash ./deploy.sh
+  only:
+    - master
