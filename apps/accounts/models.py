@@ -25,8 +25,19 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class Currencies(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    code = models.TextField(unique=True)
+    name = models.TextField(blank=False)
+    symbol = models.TextField(blank=False)
+
+    class Meta:
+        db_table = 'currencies'
+
+
 class UserAccount(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_account')
+    currency = models.OneToOneField(Currencies, on_delete=models.CASCADE, blank=False, related_name='user_account_currency')
     account = models.IntegerField()
     balance = models.DecimalField(max_digits=20, decimal_places=4)
     name = models.CharField(max_length=128)
