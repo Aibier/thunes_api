@@ -6,8 +6,8 @@ services:
   - docker:dind
 
 stages:
-  - test
   - build
+  - test
   - deploy
 
 variables:
@@ -18,25 +18,23 @@ before_script:
   - export IMAGE=$CI_REGISTRY/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
   - export WEB_IMAGE=$IMAGE:web
   - export NGINX_IMAGE=$IMAGE:nginx
-  - apk add --no-cache openssh-client bash
   - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
-
-test:
-  stage: test
-  script:
-    - docker pull $IMAGE:web || true
-    - docker pull $IMAGE:nginx || true
-    - docker-compose -f docker-compose.yml up -d --build
-    - python3 manage.py test
 
 build:
   stage: build
   script:
     - docker pull $IMAGE:web || true
     - docker pull $IMAGE:nginx || true
-    - docker-compose -f docker-compose.ci.yml up -d  --build
+    - docker-compose -f docker-compose.yml up -d  --build
     - docker push $IMAGE:web
     - docker push $IMAGE:nginx
+
+test:
+  stage: test
+  script:
+    - docker pull $IMAGE:web || true
+    - docker pull $IMAGE:nginx || true
+    - docker-compose -f docker-compose.ci.yml up -d --build
 
 deploy:
   stage: deploy

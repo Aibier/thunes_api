@@ -8,7 +8,7 @@ services:
       cache_from:
         - "${WEB_IMAGE}"
     image: "${WEB_IMAGE}"
-    command: gunicorn core.config.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn core.config.wsgi:application --bind 0.0.0.0:8000 --settings=core.config.local
     volumes:
       - static_volume:/usr/src/app/staticfiles
       - media_volume:/usr/src/app/mediafiles
