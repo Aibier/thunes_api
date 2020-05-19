@@ -1,6 +1,6 @@
 # Application Name: Thunes API
 This api provides functionalities with jwt authentication, create account, topup account, view account balance, transfer from one account to another account.
-
+![alt text](https://github.com/Aibier/thunes_api/blob/master/core/staticfiles/barchart.png)
 ### Technologues: Python, Django Rest Framework, CI/CD with Gitlab, Postgres
 
 ### To setup application:

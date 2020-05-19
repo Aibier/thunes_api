@@ -58,21 +58,21 @@ def generate_report(user_id, start, end):
     
     df = pd.DataFrame()
     df['Month'] = ["Feb", "March", "April", "May"]
-    # df['Spend'] = [3, 4, 5, 3]
-    # df['Earn'] = [0, 3, 4, 1.89]
+    df['Spend'] = [70, 65, 62, 45]
+    df['Earn'] = [90, 76, 80, 78]
 
-    df['Spend'] = [
-        int(feb_spend['amount__sum'])/1000 if march_spend['amount__sum'] else 0.00,
-        int(march_spend['amount__sum'])/1000 if march_spend['amount__sum'] else 0.00,
-        int(april_spend['amount__sum'])/1000 if april_spend['amount__sum'] else 0.00,
-        int(may_spend['amount__sum'])/1000 if may_spend['amount__sum'] else 0.00
-    ]
-    df['Earn'] = [
-        int(feb_earn['amount__sum'])/1000 if feb_earn['amount__sum'] else 0.00,
-        int(march_earn['amount__sum'])/1000 if march_earn['amount__sum'] else 0.00,
-        int(april_earn['amount__sum'])/1000 if april_earn['amount__sum'] else 0.00,
-        int(may_earn['amount__sum'])/1000 if may_earn['amount__sum'] else 0.00
-    ]
+#     df['Spend'] = [
+#         int(feb_spend['amount__sum'])/1000 if march_spend['amount__sum'] else 0.00,
+#         int(march_spend['amount__sum'])/1000 if march_spend['amount__sum'] else 0.00,
+#         int(april_spend['amount__sum'])/1000 if april_spend['amount__sum'] else 0.00,
+#         int(may_spend['amount__sum'])/1000 if may_spend['amount__sum'] else 0.00
+#     ]
+#     df['Earn'] = [
+#         int(feb_earn['amount__sum'])/1000 if feb_earn['amount__sum'] else 0.00,
+#         int(march_earn['amount__sum'])/1000 if march_earn['amount__sum'] else 0.00,
+#         int(april_earn['amount__sum'])/1000 if april_earn['amount__sum'] else 0.00,
+#         int(may_earn['amount__sum'])/1000 if may_earn['amount__sum'] else 0.00
+#     ]
 
 
     title("Recent 4 months sped/expanse report")
@@ -80,7 +80,7 @@ def generate_report(user_id, start, end):
     ylabel('Amount/(1000)SGD')
 
     c = [2.0, 4.0, 6.0, 8.0]
-    m = [1.5, 3.5, 4.5, 7.5]
+    m = [1.5, 3.5, 5.5, 7.5]
 
     xticks(c, df['Month'])
     bar([], 0)
