@@ -13,46 +13,47 @@ df = pd.DataFrame()
 def generate_report(user_id, start, end):
     
     current_year = datetime.now().year
+    current_month = datetime.now().month
     feb_spend = Transaction.objects.filter(
         created_timestamp__year=current_year, 
-        created_timestamp__month=2,
+        created_timestamp__month=current_month-3,
         sender_id=user_id
     ).aggregate(Sum('amount'))
     march_spend = Transaction.objects.filter(
         created_timestamp__year=current_year,
-        created_timestamp__month=3,
+        created_timestamp__month=current_month-2,
         sender_id=user_id).aggregate(Sum('amount'))
     april_spend = Transaction.objects.filter(
         created_timestamp__year=current_year,
-        created_timestamp__month=4, 
+        created_timestamp__month=current_month-1,
         sender_id=user_id).aggregate(Sum('amount'))
     may_spend = Transaction.objects.filter(
         created_timestamp__year=current_year,
-        created_timestamp__month=5, sender_id=user_id
+        created_timestamp__month=current_month, sender_id=user_id
         ).aggregate(Sum('amount'))
 
     # earn
     feb_earn = Transaction.objects.filter(
         created_timestamp__year=current_year, 
         receiver_id=user_id,
-        created_timestamp__month=3
+        created_timestamp__month=current_month-3
         ).aggregate(Sum('amount')
     )
     march_earn = Transaction.objects.filter(
         created_timestamp__year=current_year, 
         receiver_id=user_id,
-        created_timestamp__month=3
+        created_timestamp__month=current_month-2
         ).aggregate(Sum('amount')
     )
     april_earn = Transaction.objects.filter(
         created_timestamp__year=current_year,
-        created_timestamp__month=4, 
+        created_timestamp__month=current_month-1,
         receiver_id=user_id).aggregate(Sum('amount')
     )
     may_earn = Transaction.objects.filter(
         created_timestamp__year=current_year, 
         receiver_id=user_id,
-        created_timestamp__month=5).aggregate(Sum('amount')
+        created_timestamp__month=current_month).aggregate(Sum('amount')
     )
     
     df = pd.DataFrame()
@@ -72,7 +73,7 @@ def generate_report(user_id, start, end):
         int(april_earn['amount__sum'])/1000 if april_earn['amount__sum'] else 0.00,
         int(may_earn['amount__sum'])/1000 if may_earn['amount__sum'] else 0.00
     ]
-    
+
 
     title("Recent 4 months sped/expanse report")
     xlabel('Month')
