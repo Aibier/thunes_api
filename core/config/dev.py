@@ -26,7 +26,7 @@ SECRET_KEY = 'f8^d84rz-epxo0$5$xrc3j+#q-tz%&eic_e#q2r4q5g&%29+tf'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['thunes.globalpeacelove.com', '*']
+ALLOWED_HOSTS = [ '*']
 
 # Application definition
 
@@ -164,14 +164,11 @@ USE_TZ = True
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 # Static resource settings
-STATIC_URL = '/public/'
-STATICFILES_DIRS = (
-    (os.path.join(PROJECT_PATH, '..', 'frontend/public'),)
-)
+STATIC_URL = '/staticfiles/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-MEDIA_URL = '{}media/'.format(STATIC_URL)
-STATIC_ROOT = os.path.join(PROJECT_PATH, '', 'resources/')
-MEDIA_ROOT = os.path.join(PROJECT_PATH, '..', 'frontend/public/media')
+MEDIA_URL = '/mediafiles/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 # Allows any client access.
 CORS_ORIGIN_ALLOW_ALL = True
