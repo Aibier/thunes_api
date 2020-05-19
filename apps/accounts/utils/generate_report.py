@@ -3,10 +3,12 @@ import pandas as pd
 from datetime import datetime
 from django.db.models import Sum
 from fpdf import FPDF
-from pylab import title, xlabel, ylabel, xticks, bar, legend, axis, savefig
+from matplotlib.pyplot import title, xlabel, ylabel, xticks, bar, legend, axis, savefig
+import matplotlib.pyplot as plt
 from apps.accounts.models import Transaction
 from django.conf import settings
 df = pd.DataFrame()
+
 
 def generate_report(user_id, start, end):
     
@@ -87,6 +89,8 @@ def generate_report(user_id, start, end):
     legend()
     axis([0, 10, 0, 100])
     savefig('barchart.png')
+    # close it to avoid web server crush
+    plt.close()
 
     pdf = FPDF()
     pdf.add_page()

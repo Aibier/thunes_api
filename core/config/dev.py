@@ -26,7 +26,7 @@ SECRET_KEY = 'f8^d84rz-epxo0$5$xrc3j+#q-tz%&eic_e#q2r4q5g&%29+tf'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['thunes.globalpeacelove.com']
+ALLOWED_HOSTS = ['thunes.globalpeacelove.com', '*']
 
 # Application definition
 
