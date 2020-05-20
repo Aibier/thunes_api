@@ -18,14 +18,13 @@ class TestUserAccountCreateAPI(TestCase):
 
     def test_create_account(self):
         token = self.login_as_customer()
-        response = self.client.post(
+        response = self.client.get(
             path=reverse('account_create'),
-            data=json.dumps({
-                "name": "tony"
-            }),
             content_type='application/json',
             HTTP_AUTHORIZATION=token)
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 200)
+        # check data format
+         self.check_api_response_format(response.data)
 
     def login_as_customer(self):
         response = self.client.post(
@@ -34,4 +33,12 @@ class TestUserAccountCreateAPI(TestCase):
             format='json')
         self.assertEqual(response.status_code, 201)
         return 'Bearer ' + response.data['access']
-    
+
+    def check_api_response_format(self, data):
+        self.assertTrue('id' in data)
+        self.assertTrue('name' in data)
+        self.assertTrue('account' in data)
+        self.assertTrue('balance' in data and data['balance'] ==0)
+        self.assertTrue('created_timestamp' in data)
+        self.assertTrue('is_active' in data)
+        self.assertTrue('user' in data)

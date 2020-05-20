@@ -16,7 +16,7 @@ from django.http import HttpResponse
 # Create your views here.
 
 
-class ThunesUserAccountAPI(CreateAPIView):
+class ThunesUserAccountAPI(APIView):
     permission_required = (IsAuthenticated,)
     serializer_class = ThunesUserAccountSerializer
 

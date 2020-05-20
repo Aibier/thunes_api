@@ -5,25 +5,12 @@ from rest_framework import serializers
 from .models import UserAccount, Transaction, TransactionStatuses, TransactionTypes
 
 
-class ThunesUserAccountSerializer(serializers.Serializer):
+class ThunesUserAccountSerializer(serializers.ModelSerializer):
     id = serializers.SerializerMethodField()
     name = serializers.CharField()
     account = serializers.SerializerMethodField()
     balance = serializers.SerializerMethodField()
     last_modified_timestamp = serializers.SerializerMethodField()
-
-    def validate_name(self, name):
-        if UserAccount.objects.filter(name=name).exists():
-            raise serializers.ValidationError(
-                detail='{} is already taken.'.format(name),
-                code=400)
-        request = self.context.get('request')
-        if not request.user.id:
-            raise serializers.ValidationError(detail='Permission denied', code=401)
-
-        if UserAccount.objects.filter(user_id=request.user.id).exists():
-            raise serializers.ValidationError(detail='This user has an account already.', code=400)
-        return name
 
     def get_name(self, name):
         return name
@@ -40,26 +27,15 @@ class ThunesUserAccountSerializer(serializers.Serializer):
     def get_last_modified_timestamp(self, instance: UserAccount):
         return instance.last_modified_timestamp
 
-    @transaction.atomic()
-    def create(self, validated_data):
-        request = self.context.get('request')
-        instance = UserAccount.objects.create(**{
-            'user_id': request.user.id,
-            'is_active': True,
-            'account': int(''.join(random.choices(string.digits, k=8))),
-            'name': validated_data.get('name'),
-            'balance': 0
-        })
-        return instance
-
+    class Meta:
+        model = UserAccount
+        fields = '__all__'
 
 class ThunesUserAccountTopupSerializer(serializers.Serializer):
-    id = serializers.SerializerMethodField()
     balance =  serializers.DecimalField(max_digits=15, decimal_places=4)
     last_modified_timestamp = serializers.SerializerMethodField()
 
     def validate_balance(self, balance):
-  
         request = self.context.get('request')
         print(request.user)
         if not request.user.id:
@@ -72,9 +48,6 @@ class ThunesUserAccountTopupSerializer(serializers.Serializer):
             raise serializers.ValidationError('Please provide valid topup amount.')
 
         return balance
-
-    def get_id(self, id):
-        return str(id)
 
     def get_last_modified_timestamp(self, instance: UserAccount):
         return instance.last_modified_timestamp
@@ -100,7 +73,6 @@ class ThunesUserTransactionSerializer(serializers.Serializer):
     def validate_amount(self, amount):
 
         request = self.context.get('request')
-        print(request.user)
         if not request.user.id:
             raise serializers.ValidationError(detail='Permission denied', code=401)
 
@@ -133,12 +105,11 @@ class ThunesUserTransactionSerializer(serializers.Serializer):
     def create(self, validated_data):
         request = self.context.get('request')
         data = validated_data
-        print(data)
         kwargs = {
             'owner_id': request.user.id,
             'sender_id':request.user.id,
-            'receiver_id': 1,
-            'amount': 1000,
+            'receiver_id': validated_data.get('receiver_id'),
+            'amount': validated_data.get('amount'),
             'type': TransactionTypes.ACCOUNT,
             'status': TransactionStatuses.COMPLETED
         }

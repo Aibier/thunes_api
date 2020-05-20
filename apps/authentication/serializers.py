@@ -1,5 +1,9 @@
+import random
+import string
 from django.contrib.auth import get_user_model
+from django.db import transaction
 from rest_framework import serializers
+from apps.accounts.models import UserAccount
 
 User = get_user_model()
 
@@ -20,6 +24,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {"password": {"write_only": True}}
 
+    @transaction.atomic()
     def create(self, validated_data):
         username = validated_data["username"]
         email = validated_data["email"]
@@ -34,4 +39,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user = User(username=username, email=email)
         user.set_password(password)
         user.save()
+        kwargs = {
+             'user_id': user.id,
+             'is_active': True,
+             'account': int(''.join(random.choices(string.digits, k=8))),
+             'name': user.username,
+             'balance': 0
+        }
+        account = UserAccount.objects.create(**kwargs)
+        print(account)
         return user
