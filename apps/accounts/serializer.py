@@ -108,6 +108,9 @@ class ThunesUserTransactionSerializer(serializers.Serializer):
     def create(self, validated_data):
         request = self.context.get('request')
         data = validated_data
+        user_account = UserAccount.objects.get(user_id=request.user.id)
+        user_account.balance = user_account.balance - validated_data.get('amount')
+        user_account.save()
         kwargs = {
             'owner_id': request.user.id,
             'sender_id':request.user.id,
