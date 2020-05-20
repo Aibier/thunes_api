@@ -3,14 +3,15 @@ from rest_framework import status
 from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated
 from .serializer import ThunesUserAccountSerializer, ThunesUserTransactionSerializer, ThunesUserAccountTopupSerializer
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView, RetrieveAPIView
+from rest_framework import viewsets
 from .models import UserAccount, Transaction
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import permissions
 from apps.accounts.utils.pagination import PaginationWithDefaults
 from apps.accounts.utils.generate_report import generate_report
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, NotFound
 from django.conf import settings
 from django.http import HttpResponse
 # Create your views here.
@@ -32,7 +33,7 @@ class ThunesUserAccountTopupAPI(CreateAPIView):
     serializer_class = ThunesUserAccountTopupSerializer
 
 
-class ThunesTransactionAPI(ListCreateAPIView):
+class ThunesTransactionViewSet(viewsets.ViewSet, ListAPIView, CreateAPIView):
     permission_required = [IsAuthenticated]
     serializer_class = ThunesUserTransactionSerializer
     pagination_class = PaginationWithDefaults
@@ -42,6 +43,16 @@ class ThunesTransactionAPI(ListCreateAPIView):
         transactions = Transaction.objects.filter(Q(sender_id=self.request.user.id) | Q(
             receiver_id=self.request.user.id))
         return transactions
+
+    def retrieve(self, request, pk):
+        transaction = Transaction.objects.filter(id=pk).first()
+        if not transaction:
+            raise NotFound(detail='Not found', code=404)
+
+        if not self.request.user.id or self.request.user.id != transaction.owner_id:
+            raise PermissionDenied(detail='Permission denied', code=403)
+        serializer = ThunesUserTransactionSerializer(transaction, context={'request': request})
+        return Response(serializer.data)
 
 
 class ThunesTransactionReportAPI(APIView):

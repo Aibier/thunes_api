@@ -33,7 +33,7 @@ class UserAccount(BaseModel):
     is_active = models.BooleanField(default=False)
 
     def __str__(self):
-        return 'Account number: {}'.format(self.account)
+        return '{}'.format(self.account)
 
     class Meta:
         db_table = 'user_account'

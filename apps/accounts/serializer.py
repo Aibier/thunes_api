@@ -68,7 +68,7 @@ class ThunesUserTransactionSerializer(serializers.Serializer):
     last_modified_timestamp = serializers.SerializerMethodField()
     sender_id = serializers.SerializerMethodField()
     is_owner = serializers.SerializerMethodField()
-
+    transaction_id = serializers.SerializerMethodField()
 
     def validate_amount(self, amount):
 
@@ -100,6 +100,9 @@ class ThunesUserTransactionSerializer(serializers.Serializer):
 
     def get_is_owner(self, instance: Transaction):
         return True if instance.sender_id == self.context.get('request').user.id else False
+
+    def get_transaction_id(self, instance: Transaction):
+        return str(instance.id)
 
     @transaction.atomic()
     def create(self, validated_data):
