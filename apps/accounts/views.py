@@ -8,7 +8,7 @@ from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.exceptions import PermissionDenied, NotFound
+from rest_framework.exceptions import PermissionDenied, NotFound, APIException
 from apps.accounts.utils.pagination import PaginationWithDefaults
 from apps.accounts.utils.generate_report import generate_report
 from apps.accounts.models import UserAccount, Transaction
@@ -56,13 +56,17 @@ class ThunesTransactionReportAPI(APIView):
     permission_required = [IsAuthenticated]
 
     def get(self, request):
-        print(self.request.user)
         user_id = self.request.user.id
         if user_id:
-            generate_report(user_id, 'Feb', 'May')
-            with open('{}/report.pdf'.format(settings.BASE_DIR), 'rb') as pdf:
-                response = HttpResponse(pdf.read(),content_type='application/pdf')
-                os.remove('{}/report.pdf'.format(settings.BASE_DIR))
-                return response
+            try:
+                generate_report(user_id, 'Feb', 'May')
+                with open('{}/report.pdf'.format(settings.BASE_DIR), 'rb') as pdf:
+                    response = HttpResponse(pdf.read(), content_type='application/pdf')
+                    os.remove('{}/report.pdf'.format(settings.BASE_DIR))
+                    return response
+            except Exception as e:
+                print(e)
+                raise APIException(detail='Unable to process file.', code=503)
+
         raise PermissionDenied(detail='Permission denied', code=403)
 
