@@ -24,9 +24,9 @@ PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
 SECRET_KEY = 'f8^d84rz-epxo0$5$xrc3j+#q-tz%&eic_e#q2r4q5g&%29+tf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = [ '*']
+ALLOWED_HOSTS = ['http://127.0.0.1:8000/', '*']
 
 # Application definition
 
