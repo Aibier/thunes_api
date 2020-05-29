@@ -13,10 +13,10 @@ This api provides functionalities with jwt authentication, create account, topup
 7. Give access to db: ```GRANT ALL PRIVILEGES ON DATABASE thunes_db to thunes_user;```
 8. Then exixt from postgres. 
 9. Inside virtual env and project root run: ``` python manage.py migrate```
-10 Run server: ```python manage.py runserver```
+10. Run server: ```python manage.py runserver 8000 --settings=core.config.dev```
 11. Run test: ```python manage.py test```
 12. To build: ```docker-compose -f docker-compose.yml up -d --build```
-13 To run: ```docker-comose up```
+13. To run: ```docker-comose up```
 
 ### To view API docs
 1. View from localhost: ```http://localhost:8000/api/docs/#```
