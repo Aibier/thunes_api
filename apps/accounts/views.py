@@ -1,20 +1,17 @@
 import os
-from rest_framework import status
 from django.db.models import Q
-from rest_framework.permissions import IsAuthenticated
-from .serializer import ThunesUserAccountSerializer, ThunesUserTransactionSerializer, ThunesUserAccountTopupSerializer
-from rest_framework.generics import CreateAPIView, ListCreateAPIView, ListAPIView, RetrieveAPIView
-from rest_framework import viewsets
-from .models import UserAccount, Transaction
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import permissions
-from apps.accounts.utils.pagination import PaginationWithDefaults
-from apps.accounts.utils.generate_report import generate_report
-from rest_framework.exceptions import PermissionDenied, NotFound
 from django.conf import settings
 from django.http import HttpResponse
-# Create your views here.
+from rest_framework.permissions import IsAuthenticated
+from .serializer import ThunesUserAccountSerializer, ThunesUserTransactionSerializer, ThunesUserAccountTopupSerializer
+from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.exceptions import PermissionDenied, NotFound
+from apps.accounts.utils.pagination import PaginationWithDefaults
+from apps.accounts.utils.generate_report import generate_report
+from apps.accounts.models import UserAccount, Transaction
 
 
 class ThunesUserAccountAPI(APIView):

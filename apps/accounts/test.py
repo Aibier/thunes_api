@@ -1,10 +1,6 @@
 from django.urls import reverse
 from test_plus.test import TestCase
-import random
-import string
-from .models import UserAccount, Transaction
-from django.contrib.auth.models import User
-import json
+
 
 class TestUserAccountCreateAPI(TestCase):
 
@@ -24,7 +20,7 @@ class TestUserAccountCreateAPI(TestCase):
             HTTP_AUTHORIZATION=token)
         self.assertEqual(response.status_code, 200)
         # check data format
-         self.check_api_response_format(response.data)
+        self.check_api_response_format(response.data)
 
     def login_as_customer(self):
         response = self.client.post(

@@ -1,5 +1,5 @@
 #!/bin/sh
-echo DEBUG=0 >> .env
+echo DEBUG=False >> .env
 echo SQL_ENGINE=django.db.backends.postgresql >> .env
 echo DATABASE=postgres >> .env
 echo SECRET_KEY=$SECRET_KEY >> .env

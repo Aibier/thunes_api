@@ -1,6 +1,6 @@
 import uuid
-from enumfields import Enum, EnumField
 from django.db import models
+from enumfields import Enum, EnumField
 from django.contrib.auth.models import User
 from datetime import date
 
